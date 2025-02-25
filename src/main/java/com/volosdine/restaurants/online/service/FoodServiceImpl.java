@@ -8,6 +8,7 @@ import com.volosdine.restaurants.online.request.CreateFoodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,9 +28,8 @@ public class FoodServiceImpl implements FoodService{
         food.setImages(req.getImages());
         food.setName(req.getName());
         food.setPrice(req.getPrice());
-        food.setSeasonal(req.isSeasonal());
-        food.setVegetarian(req.isVegetarian());
         food.setIngredients(req.getIngredients());
+        food.setCreationDate(new Date());
 
 
         Food savedFood = foodRepository.save(food);
@@ -47,25 +47,15 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public List<Food> getRestaurantsFood(Long restaurantId,
-                                         boolean isVegetarian,
-                                         boolean isNonveg,
-                                         boolean isSeasonal, String foodCategory) {
+                                         String foodCategory) {
 
         List<Food> foods = foodRepository.findByRestaurantId(restaurantId);
 
-        if (isVegetarian) {
-            foods = filterByVegetarian(foods, isVegetarian);
-        }
-        if (isNonveg) {
-            foods = filterByNonveg(foods, isNonveg);
-        }
-        if (isSeasonal) {
-            foods = filterBySeasonal(foods, isSeasonal);
-        }
+
         if (foodCategory != null && !foodCategory.equals("")) {
             foods = filterByCategory(foods, foodCategory);
         }
-        return List.of();
+        return foods;
     }
 
     private List<Food> filterByCategory(List<Food> foods, String foodCategory) {
@@ -77,18 +67,6 @@ public class FoodServiceImpl implements FoodService{
         }).collect(Collectors.toList());
     }
 
-    private List<Food> filterBySeasonal(List<Food> foods, boolean isSeasonal) {
-        return foods.stream().filter(food -> food.isSeasonal()==isSeasonal).collect(Collectors.toList());
-    }
-
-    private List<Food> filterByNonveg(List<Food> foods, boolean isNonveg) {
-        return foods.stream().filter(food -> food.isVegetarian()==false).collect(Collectors.toList());
-
-    }
-
-    private List<Food> filterByVegetarian(List<Food> foods, boolean isVegetarian) {
-        return foods.stream().filter(food -> food.isVegetarian()==isVegetarian).collect(Collectors.toList());
-    }
 
     @Override
     public List<Food> searchFood(String keyword) {

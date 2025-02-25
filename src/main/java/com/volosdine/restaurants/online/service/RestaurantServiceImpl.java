@@ -112,20 +112,21 @@ public class RestaurantServiceImpl implements RestaurantService{
         dto.setTitle(restaurant.getName());
         dto.setId(restaurant.getId());
 
-       boolean isFavorited = false;
-       List<RestaurantDto> favorites =  user.getFavorites();
-       for (RestaurantDto favorite : favorites) {
-           if (favorite.getId().equals(restaurantId)) {
-               isFavorited = true;
-               break;
-           }
-       }
 
-       if (isFavorited) {
-           favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
-       } else {
-           favorites.add(dto);
-       }
+        boolean isFavorited = false;
+        List<RestaurantDto> favorites =  user.getFavorites();
+        for (RestaurantDto favorite : favorites) {
+            if (favorite.getId().equals(restaurantId)) {
+                isFavorited = true;
+                break;
+            }
+        }
+
+        if (isFavorited) {
+            favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
+        } else {
+            favorites.add(dto);
+        }
 
         userRepository.save(user);
         return dto;
@@ -137,4 +138,8 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurant.setOpen(!restaurant.isOpen());
         return restaurantRepository.save(restaurant);
     }
+
+
+
+
 }

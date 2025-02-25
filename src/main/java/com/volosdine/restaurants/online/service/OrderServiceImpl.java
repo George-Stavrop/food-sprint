@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService{
         Order createdOrder = new Order();
         createdOrder.setCustomer(user);
         createdOrder.setCreatedAt(new Date());
-        createdOrder.setOrderStatus("PENDING");
+        createdOrder.setOrderStatus("Ετοιμάζεται");
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
 
@@ -80,10 +80,10 @@ public class OrderServiceImpl implements OrderService{
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
         Order order  = findOrderById(orderId);
         
-        if (orderStatus.equals("OUT_FOR_DELIVERY")
-                || orderStatus.equals("DELIVERED")
-                || orderStatus.equals("COMPLETED")
-                || orderStatus.equals("PENDING")
+        if (orderStatus.equals("Σε_διανομή")
+                || orderStatus.equals("Ολοκληρώθηκε")
+                || orderStatus.equals("Έφτασε")
+                || orderStatus.equals("Ετοιμάζεται")
         ) {
             order.setOrderStatus(orderStatus);
             return orderRepository.save(order);
